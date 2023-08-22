@@ -1,0 +1,11 @@
+services:
+  clickhouse:
+    build:
+      context: ../../
+      dockerfile: ./docker/clickhouse/Dockerfile
+    env_file:
+      - ../../.env.example
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+volumes:
+  clickhouse_data:

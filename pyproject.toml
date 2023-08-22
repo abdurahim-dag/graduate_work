@@ -1,0 +1,65 @@
+[tool.black]
+target-version = ['py311']
+skip-string-normalization = true
+skip-magic-trailing-comma = true
+
+[tool.pyright]
+venv = '.venv'
+venvPath = '.'
+useLibraryCodeForTypes = true
+
+
+[tool.alembic]
+script_location = "alembic"
+prepend_sys_path = true
+version_path_separator = "os"
+sqlalchemy.url = "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/$POSTGRES_DB"
+
+[tool.alembic.post_write_hooks]
+
+[tool.alembic.logging]
+keys = ["root", "sqlalchemy", "alembic"]
+
+[tool.alembic.logging.handlers]
+keys = ["console"]
+
+[tool.alembic.logging.formatters]
+keys = ["generic"]
+
+[tool.alembic.logging.logger_root]
+level = "WARN"
+handlers = ["console"]
+qualname = ""
+
+[tool.alembic.logging.logger_sqlalchemy]
+level = "WARN"
+handlers = []
+qualname = "sqlalchemy.engine"
+
+[tool.alembic.logging.logger_alembic]
+level = "INFO"
+handlers = []
+qualname = "alembic"
+
+[tool.alembic.logging.handler_console]
+class = "logging.StreamHandler"
+args = ["sys.stderr"]
+level = "NOTSET"
+formatter = "generic"
+
+[tool.alembic.logging.formatter_generic]
+format = "%(levelname)-5.5s [%(name)s] %(message)s"
+datefmt = "%H:%M:%S"
+
+[tool.pytest.ini_options]
+asyncio_mode = 'auto'
+markers = [
+    "authentication",
+    "openapi",
+    "oauth",
+    "fastapi_users",
+    "jwt",
+    "manager",
+    "router",
+    "asyncio",
+]
