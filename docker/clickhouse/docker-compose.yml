@@ -3,6 +3,9 @@ services:
     build:
       context: ../../
       dockerfile: ./docker/clickhouse/Dockerfile
+    ports:
+      - "9000:9000"
+      - "8123:8123"
     env_file:
       - ../../.env.example
     volumes:
