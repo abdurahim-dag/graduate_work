@@ -2,24 +2,26 @@ version: '3'
 
 services:
   postgres:
-    container_name: staging
+    container_name: movies
     build:
       context: ../../
-      dockerfile: ./docker/staging/Dockerfile
-    env_file:
-      - ../../.env.example
-    hostname: staging
+      dockerfile: ./docker/movies/Dockerfile
+    environment:
+      POSTGRES_DB: movies_database
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: qwe123
+    hostname: movies
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "etl"]
       interval: 5s
       retries: 5
     ports:
-      - 5433:5432
+      - 5432:5432
     networks:
       - shared_network
       - default
     volumes:
-      - db-staging-volume:/var/lib/postgresql/data
+      - db-movies-volume:/var/lib/postgresql/data
     restart: unless-stopped
 
 networks:
@@ -28,4 +30,4 @@ networks:
     driver: bridge
 
 volumes:
-  db-staging-volume:
+  db-movies-volume:

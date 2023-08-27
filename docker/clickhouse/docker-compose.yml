@@ -1,3 +1,4 @@
+version: '3'
 services:
   clickhouse:
     build:
@@ -8,7 +9,16 @@ services:
       - "8123:8123"
     env_file:
       - ../../.env.example
+    networks:
+      - shared_network
+      - default
     volumes:
       - clickhouse_data:/var/lib/clickhouse
+
+networks:
+  shared_network:
+    name: shared_network
+    driver: bridge
+
 volumes:
   clickhouse_data:

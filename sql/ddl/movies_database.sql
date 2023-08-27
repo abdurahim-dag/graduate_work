@@ -1,4 +1,3 @@
-CREATE DATABASE movies_database;
 CREATE SCHEMA if not exists content;
 
 SET search_path TO content,public;

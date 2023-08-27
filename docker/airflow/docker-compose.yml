@@ -72,6 +72,9 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    networks:
+      - shared_network
+      - default
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -107,6 +110,9 @@ services:
       # Required to handle warm shutdown of the celery workers properly
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
+    networks:
+      - shared_network
+      - default
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -220,6 +226,11 @@ services:
 #      <<: *airflow-common-depends-on
 #      airflow-init:
 #        condition: service_completed_successfully
+
+networks:
+  shared_network:
+    name: shared_network
+    driver: bridge
 
 volumes:
   postgres-airflow-db-volume:

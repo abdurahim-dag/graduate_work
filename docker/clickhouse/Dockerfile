@@ -1,8 +1,5 @@
 FROM clickhouse/clickhouse-server:latest
 
-COPY ./docker/clickhouse/init.sh /home/init.sh
-RUN chmod +x /home/init.sh
-
 COPY ./sql/ddl/mart.sql /home/mart.sql
 RUN chmod +x /home/mart.sql
 
