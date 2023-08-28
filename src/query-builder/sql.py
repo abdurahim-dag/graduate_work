@@ -1,5 +1,5 @@
 from .base import QueryBuilderBase
-from models import EventSubscription
+from core import EventSubscription
 
 class SQLQueryBuilder(QueryBuilderBase):
 
@@ -7,4 +7,5 @@ class SQLQueryBuilder(QueryBuilderBase):
         self._settings = settings
 
     def _build(self):
+        pass
 
