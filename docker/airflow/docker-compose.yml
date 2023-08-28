@@ -24,9 +24,9 @@ x-airflow-common:
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
     - ./dags:/opt/airflow/dags
-    - airflow-logs-volume:/opt/airflow/logs
+    - airflow-logs-volume-md:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-    - airflow-data-volume:/data
+    - airflow-data-volume-md:/data
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -43,7 +43,7 @@ services:
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
     volumes:
-      - postgres-airflow-db-volume:/var/lib/postgresql/data
+      - postgres-airflow-db-volume-md:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
@@ -233,6 +233,6 @@ networks:
     driver: bridge
 
 volumes:
-  postgres-airflow-db-volume:
-  airflow-logs-volume:
-  airflow-data-volume:
+  postgres-airflow-db-volume-md:
+  airflow-logs-volume-md:
+  airflow-data-volume-md:

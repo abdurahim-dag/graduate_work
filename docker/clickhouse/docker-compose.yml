@@ -13,7 +13,7 @@ services:
       - shared_network
       - default
     volumes:
-      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_data-md:/var/lib/clickhouse
 
 networks:
   shared_network:
@@ -21,4 +21,4 @@ networks:
     driver: bridge
 
 volumes:
-  clickhouse_data:
+  clickhouse_data-md:

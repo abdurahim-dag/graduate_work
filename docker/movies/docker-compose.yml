@@ -21,7 +21,7 @@ services:
       - shared_network
       - default
     volumes:
-      - db-movies-volume:/var/lib/postgresql/data
+      - db-movies-volume-md:/var/lib/postgresql/data
     restart: unless-stopped
 
 networks:
@@ -30,4 +30,4 @@ networks:
     driver: bridge
 
 volumes:
-  db-movies-volume:
+  db-movies-volume-md:

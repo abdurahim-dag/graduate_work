@@ -15,7 +15,7 @@ services:
       - shared_network
       - default
     volumes:
-      - es-data01:/usr/share/elasticsearch/data
+      - es-data01-md:/usr/share/elasticsearch/data
     ulimits:
       memlock:
         soft: -1
@@ -28,4 +28,4 @@ networks:
     driver: bridge
 
 volumes:
-  es-data01:
+  es-data01-md:

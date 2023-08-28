@@ -19,7 +19,7 @@ services:
       - shared_network
       - default
     volumes:
-      - db-staging-volume:/var/lib/postgresql/data
+      - db-staging-volume-md:/var/lib/postgresql/data
     restart: unless-stopped
 
 networks:
@@ -28,4 +28,4 @@ networks:
     driver: bridge
 
 volumes:
-  db-staging-volume:
+  db-staging-volume-md:
