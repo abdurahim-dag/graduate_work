@@ -13,13 +13,23 @@ class BaseExtractorSettings(BaseModel):
     fields: List[str] = []
 
 
-class PostgresExtractorSettings(BaseExtractorSettings):
+class SqlExtractorSettings(BaseExtractorSettings):
     """Специализированный класс настроек, для SQL."""
     schema: str = 'staging'
-    aggregations: List[Tuple[str, str]] = []
-    group_by: List[str] = []
     where_conditions: List[str] = []
-    order_by: List[Tuple[str, str]] = []
+
+
+class PostgresExtractorSettings(SqlExtractorSettings):
+    host: str
+    port: int
+    username: str
+    password: str
+    dbname: str
+    batch_size: int
+
+    @property
+    def conn_params(self):
+        return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
 
 
 @dataclasses.dataclass
@@ -30,9 +40,3 @@ class TransformSettings:
     schema: str = 'staging'
 
 
-@dataclasses.dataclass
-class SourcePostgresSettings:
-    host: str
-    port: int
-    username: str
-    password: str
