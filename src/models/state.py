@@ -3,6 +3,6 @@ from pydantic import BaseModel
 
 
 class EtlState(BaseModel):
-    date_from: Date | None
+    date_from: Date = Date(2023,1,1)
     date_to: Date | None
-    step: int | None
+    offset: int = 0

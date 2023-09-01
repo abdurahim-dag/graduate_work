@@ -3,10 +3,10 @@ import json
 import redis
 from utils import logger, on_exception, MyEncoder, json_parser
 from models import EtlState
-from .base import BaseState
+from .base import BaseStorageState
 
 
-class RedisState(BaseState):
+class RedisStorageState(BaseStorageState):
     def __init__(self, key: str, host: str, port: int, db: int = 0):
         self._redis = redis.Redis(host=host, port=port, db=db, decode_responses=True)
         self.key = key

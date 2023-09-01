@@ -1,3 +1,2 @@
-from .config import BaseExtractorSettings, SqlExtractorSettings, PostgresExtractorSettings
-from .config import TransformSettings
-from .config import SourcePostgresSettings
+from .config import BaseQueryBuilderSettings, SqlQueryBuilderSettings, PostgresExtractorSettings
+from .config import Settings

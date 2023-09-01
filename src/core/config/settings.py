@@ -1,4 +1,5 @@
 from pydantic import BaseConfig, Field
+import pathlib
 
 class Settings(BaseConfig):
 
@@ -11,7 +12,7 @@ class Settings(BaseConfig):
     group_id: str = Field("group_watching_movies", env="KAFKA_GROUP_ID")
     topic: str = Field("watching_movies", env="KAFKA_TOPIC")
     batch_timeout: int = Field(10, env="BATCH_TIMEOUT")  # in sec
-    batch_size: int = Field(10, env="BATCH_SIZE")
+    batch_size: int = Field(100, env="BATCH_SIZE")
 
     ch_host: str = Field("localhost", env="CLICKHOUSE_HOST")
     ch_port: int = Field(18123, env="CLICKHOUSE_PORT")
@@ -26,6 +27,13 @@ class Settings(BaseConfig):
     staging_password: str = Field("123qwe", env="STAGING_PASSWORD")
     staging_dbname: str = Field("etl", env="STAGING_DBNAME")
 
+    movies_host: str = Field("localhost", env="MOVIES_HOST")
+    movies_port: int = Field(5432, env="MOVIES_PORT")
+    movies_username: str = Field("etl", env="MOVIES_USERNAME")
+    movies_password: str = Field("123qwe", env="MOVIES_PASSWORD")
+    movies_dbname: str = Field("etl", env="MOVIES_DBNAME")
+
+    extract_dir_path = pathlib.PurePath('/data')
 
     @property
     def kafka_server(self):

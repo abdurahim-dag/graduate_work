@@ -1,7 +1,7 @@
 import abc
 from models import EtlState
 
-class BaseState:
+class BaseStorageState:
     @abc.abstractmethod
     def save(self, state: EtlState) -> None:
         """Сохранить офсет партиции в постоянное хранилище"""
