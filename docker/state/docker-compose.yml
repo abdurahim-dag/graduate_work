@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  state:
+    image: redis:latest
+    container_name: state
+    hostname: state
+    ports:
+      - 6379:6379
+    networks:
+      - shared_network
+      - default
+    restart: unless-stopped
+
+networks:
+  shared_network:
+    name: shared_network
+    driver: bridge

@@ -15,7 +15,7 @@ class BaseQueryBuilderSettings(BaseModel):
 
 class SqlQueryBuilderSettings(BaseQueryBuilderSettings):
     """Специализированный класс настроек, для SQL."""
-    schema: str = 'staging'
+    dbschema: str = 'staging'
     where_conditions: List[str] = []
     limit: int = 100
     offset: int = 0

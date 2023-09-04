@@ -31,11 +31,12 @@ def on_exception(
         # чтобы не потерять описание декорируемой функции.
         @wraps(target)
         def retry(*args, **kwargs):
+            res = None
             step = 0
             sleep_gen = sleep_expo_gen(start_sleep_time, border_sleep_time, factor)
             while True:
                 try:
-                    target(*args, **kwargs)
+                    res = target(*args, **kwargs)
                 except exception as err:
                     logger.exception(err)
                     if max_retries <= step:
@@ -47,5 +48,6 @@ def on_exception(
                     time.sleep(sleep_time)
                 else:
                     break
+            return res
         return retry
     return retry_exception

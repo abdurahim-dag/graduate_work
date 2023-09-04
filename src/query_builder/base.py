@@ -1,10 +1,10 @@
 import abc
-from core import BaseExtractorSettings
+from core import BaseQueryBuilderSettings
 
 class QueryBuilderBase(abc.ABC):
 
     @abc.abstractmethod
-    def __init__(self, settings: BaseExtractorSettings):
+    def __init__(self, settings: BaseQueryBuilderSettings):
         """Строит запрос."""
         pass
 

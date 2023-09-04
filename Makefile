@@ -16,6 +16,9 @@
 0-start-kafka:
 	docker compose -f ./docker/kafka/docker-compose.yml --env-file ./.env.example up -d
 
+0-start-state:
+	docker compose -f ./docker/state/docker-compose.yml up -d
+
 elasricsearch-create-indexes:
 	curl -X PUT "http://localhost:9200/movies" -H "Content-Type: application/json" -d @./test-data/schemas/es_schema_movies.json
 	curl -X PUT "http://localhost:9200/genres" -H "Content-Type: application/json" -d @./test-data/schemas/es_schema_genres.json
@@ -41,5 +44,6 @@ down-all:
 	docker compose -f ./docker/elasticsearch/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/clickhouse/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/kafka/docker-compose.yml down --remove-orphans -v
+	docker compose -f ./docker/redis/docker-compose.yml down --remove-orphans -v
 
-start-all: 0-start-staging 0-start-movies 0-start-airflow 0-start-clickhouse 0-start-elasticsearch 0-start-kafka
+start-all: 0-start-staging 0-start-state 0-start-movies 0-start-airflow 0-start-clickhouse 0-start-elasticsearch 0-start-kafka

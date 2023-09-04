@@ -33,7 +33,7 @@ class SimpleSQLQueryBuilder(QueryBuilderBase):
             if self._settings.fields else "*"
         select_clause = f"SELECT {fields}"
 
-        from_clause = f"FROM {self._settings.schema}.{self._settings.source_name}"
+        from_clause = f"FROM {self._settings.dbschema}.{self._settings.source_name}"
 
         query = f"""{select_clause} {from_clause}
             {self._build_where_conditions()}"""

@@ -1,65 +1,56 @@
-from typing import List
-from typing import Optional
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy import Table, Column, UUID
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
-import datetime
-import uuid
+from pathlib import Path
+from uuid import UUID
+from typing import Any
 
-class Base(DeclarativeBase):
-    pass
-
-
-class CommonMixin:
-    id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-
-
-
-person_film_work = Table(
-    "person_film_work",
-    Base.metadata,
-    Column("id", UUID, primary_key=True),
-    Column("role", String()),
-    Column("film_work", UUID, ForeignKey("film_work.id")),
-    Column("person", UUID, ForeignKey("person.id")),
+from pendulum import Date
+from pydantic import (
+    BaseModel,
+    Field,
+    field_validator,
+    BaseSettings,
 )
-
-genre_film_work = Table(
-    "genre_film_work",
-    Base.metadata,
-    Column("id", UUID, primary_key=True),
-    Column("film_work", UUID, ForeignKey("film_work.id")),
-    Column("genre", UUID, ForeignKey("genre.id")),
-)
+from typing import Any
 
 
-class TimeStampedMixin:
-    created: Mapped[datetime.datetime]
-    modified: Mapped[datetime.datetime]
+class UUIDMixin(BaseModel):
+    id: UUID
 
-class Genre(CommonMixin, TimeStampedMixin, Base):
-    __tablename__ = "genre"
+class GenreName(UUIDMixin):
+    name: str
 
-    name: Mapped[str]
-    description: Mapped[str]
-
-class Person(CommonMixin, TimeStampedMixin, Base):
-    __tablename__ = "person"
-
-    full_name: Mapped[str]
+class Genre(GenreName):
+    description: str
 
 
-class FilmWork(CommonMixin, TimeStampedMixin, Base):
-    __tablename__ = "film_work"
+class PersonName(UUIDMixin):
+    name: str
 
-    title: Mapped[str]
-    description: Mapped[str]
-    creation_date: Mapped[datetime.datetime]
-    rating: Mapped[float]
-    type: Mapped[str]
-    genres: Mapped[List[Genre]] = relationship(secondary=genre_film_work)
-    person: Mapped[List[Person]] = relationship(secondary=person_film_work)
+
+class Person(UUIDMixin):
+    full_name: str
+    role: str
+    film_ids: list[str] | None
+
+
+class Movie(UUIDMixin):
+    imdb_rating: float
+    genre: list[GenreName]
+
+    title: str
+    description: str | None
+
+    directors: list[PersonName]
+    actors: list[PersonName]
+    writers: list[PersonName]
+
+    actors_names: list[str] | None
+    writers_names: list[str] | None
+
+    @field_validator('imdb_rating')
+    @classmethod
+    def fix_raiting(cls, v):
+        if v < 0:
+            v = 0
+        elif v > 100:
+            v = 100
+        return v

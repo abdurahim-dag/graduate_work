@@ -5,9 +5,9 @@ from typing import List, Tuple, Optional
 
 
 @dataclasses.dataclass
-class TransformSettings:
-    file_name: str
-    file_path: pathlib.Path
-    index_name: str
-    schema: str = 'staging'
-
+class CSVTransformSettings:
+    src_dir_path: pathlib.Path
+    dst_dir_path: pathlib.Path
+    src_prefix_file: str = 'extract'
+    dst_prefix_file: str = 'transformed'
+    incorrect_prefix_file: str = 'incorrect-transformed'

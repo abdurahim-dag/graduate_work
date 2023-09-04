@@ -11,6 +11,7 @@ class PostgresExtractorSettings(BaseModel):
     password: str
     dbname: str
     batch_size: int
+    filename_prefix: str = 'extract'
 
     @property
     def conn_params(self):

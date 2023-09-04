@@ -1,3 +1,2 @@
-from .base import BaseState
-from .offset import BaseOffsetStorage, RedisOffsetStorage
-from .redis import RedisState
+from .base import BaseStorageState
+from .redis import RedisStorageState
