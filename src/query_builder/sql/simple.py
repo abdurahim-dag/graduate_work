@@ -2,7 +2,7 @@ from core import SqlQueryBuilderSettings
 from query_builder import QueryBuilderBase
 
 
-class SimpleSQLQueryBuilder(QueryBuilderBase):
+class SimpleSQLBuilder(QueryBuilderBase):
     """Простой генератор запросов."""
     def __init__(self, settings: SqlQueryBuilderSettings):
         """

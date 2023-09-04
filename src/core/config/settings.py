@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     movies_password: str = Field(default="qwe123", env="MOVIES_PASSWORD")
     movies_dbname: str = Field(default="movies_database", env="MOVIES_DBNAME")
 
-    extract_dir_path: pathlib.PurePath = pathlib.PurePath('./data')
+    data_dir_path: pathlib.PurePath = pathlib.PurePath('./data')
 
     @property
     def kafka_server(self):

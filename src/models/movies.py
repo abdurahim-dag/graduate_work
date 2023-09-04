@@ -1,19 +1,24 @@
-from pathlib import Path
+from pendulum import DateTime
 from uuid import UUID
-from typing import Any
-
+from typing import Annotated, get_origin, Optional
 from pendulum import Date
 from pydantic import (
     BaseModel,
-    Field,
+    ConfigDict,
     field_validator,
-    BaseSettings,
-)
-from typing import Any
+    FieldValidationInfo
+ )
+
 
 
 class UUIDMixin(BaseModel):
     id: UUID
+
+class DateUUIDMixin(UUIDMixin):
+    created: DateTime
+    modified: DateTime
+
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 class GenreName(UUIDMixin):
     name: str
@@ -32,25 +37,23 @@ class Person(UUIDMixin):
     film_ids: list[str] | None
 
 
-class Movie(UUIDMixin):
-    imdb_rating: float
-    genre: list[GenreName]
+class Movie(DateUUIDMixin):
+    rating: Optional[float]
+    creation_date: Optional[DateTime]
 
-    title: str
-    description: str | None
+    title: Optional[str]
+    type: Optional[str]
+    description: Optional[str]
 
-    directors: list[PersonName]
-    actors: list[PersonName]
-    writers: list[PersonName]
+    __table_name__ = 'film_work'
 
-    actors_names: list[str] | None
-    writers_names: list[str] | None
 
-    @field_validator('imdb_rating')
+    @field_validator('rating')
     @classmethod
     def fix_raiting(cls, v):
-        if v < 0:
-            v = 0
-        elif v > 100:
-            v = 100
+        if v is not None:
+            if v < 0:
+                v = 0
+            elif v > 100:
+                v = 100
         return v

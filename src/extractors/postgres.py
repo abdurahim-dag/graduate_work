@@ -1,6 +1,5 @@
 import json
-import csv
-from contextlib import closing
+from psycopg.rows import dict_row
 from pathlib import PurePath, Path
 
 import pendulum
@@ -8,6 +7,7 @@ import psycopg
 
 from utils import on_exception
 from utils import logger
+from utils import MyEncoder
 from core import PostgresExtractorSettings, SqlQueryBuilderSettings
 
 from states import BaseStorageState
@@ -23,18 +23,16 @@ class PostgresExtractor:
             storage_state: BaseStorageState,
             query_builder_type: Type[QueryBuilderBase],
             query_builder_settings: SqlQueryBuilderSettings,
-            extract_dir_path: PurePath,
 
     ) -> None:
         self._settings = settings
         self._storage_state = storage_state
         self._query_builder_type = query_builder_type
         self._query_builder_settings = query_builder_settings
-        self._extract_dir_path = extract_dir_path
 
 
     def _get_filname(self, prefix: str, name: str, date: str, offset: str) -> str:
-        return f"{prefix}-{name}-{date}-{offset}.csv"
+        return f"{prefix}-{name}-{date}-{offset}.json"
 
     def _get_filepath(self, date: str, offset: str) -> str:
         file_name = self._get_filname(
@@ -43,7 +41,7 @@ class PostgresExtractor:
             date=date,
             offset=offset
         )
-        return str(self._extract_dir_path / file_name)
+        return str(self._settings.dir_path / file_name)
 
 
     @on_exception(
@@ -56,7 +54,7 @@ class PostgresExtractor:
     )
     def _extract(self):
         """Extract rows to files."""
-        with psycopg.connect(conninfo=self._settings.conn_params) as conn:
+        with psycopg.connect(conninfo=self._settings.conn_params, row_factory=dict_row) as conn:
             with conn.cursor() as curs:
 
                 while True:
@@ -65,7 +63,6 @@ class PostgresExtractor:
                     sql = self._query_builder_type(settings=self._query_builder_settings).build_query()
 
                     curs.execute(sql)
-                    columns = [desc[0] for desc in curs.description]
 
                     rows = curs.fetchall()
                     if len(rows) == 0:
@@ -77,15 +74,7 @@ class PostgresExtractor:
                     )
 
                     with open(file_path, 'w', encoding='utf-8') as f:
-                        csvwriter = csv.writer(
-                            f,
-                            delimiter=',',
-                            quotechar='"',
-                            quoting=csv.QUOTE_ALL,
-                            lineterminator='\n',
-                        )
-                        csvwriter.writerow(columns)
-                        csvwriter.writerows(rows)
+                        json.dump(rows, f, cls=MyEncoder, sort_keys=True, ensure_ascii=False)
 
                     # Сохраняем каждый выполненный шаг.
                     self._state.offset += self._query_builder_settings.limit

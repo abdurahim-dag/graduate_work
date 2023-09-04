@@ -1,1 +1,2 @@
-from .simple import SimpleSQLQueryBuilder
+from .simple import SimpleSQLBuilder
+from .insert import InsertSQLBuilder

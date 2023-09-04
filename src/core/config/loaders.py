@@ -4,7 +4,8 @@ import pathlib
 from typing import List, Tuple, Optional
 
 
-class PostgresExtractorSettings(BaseModel):
+@dataclasses.dataclass
+class PostgresStagingLoaderSettings:
     host: str
     port: int
     username: str
@@ -13,8 +14,12 @@ class PostgresExtractorSettings(BaseModel):
     batch_size: int
 
     dir_path: pathlib.PurePath
-    filename_prefix: str = 'extract'
+    src_prefix_file: str
+
+    dbschema: str = 'staging'
 
     @property
     def conn_params(self):
         return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
+
+
