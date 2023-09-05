@@ -30,7 +30,7 @@ class JSONTransformer:
 
 
     def run(self):
-        for src_file in pathlib.Path(self._settings.dir_path).glob(f"**/{self._settings.src_prefix_file}-*.json"):
+        for src_file in pathlib.Path(self._settings.dir_path).glob(f"**/{self._settings.src_prefix_file}*.json"):
             correct: list[dict | None] = []
             incorrect: list[dict | None] = []
 
@@ -55,19 +55,11 @@ class JSONTransformer:
 
             correct_target_file = pathlib.PurePath(
                 self._settings.dir_path,
-                re.sub(
-                    self._settings.src_prefix_file,
-                    self._settings.correct_prefix_file,
-                    src_file.name
-                )
+                f"{self._settings.correct_prefix_file}{src_file.name}"
             )
             incorrect_target_file = pathlib.PurePath(
                 self._settings.dir_path,
-                re.sub(
-                    self._settings.src_prefix_file,
-                    self._settings.incorrect_prefix_file,
-                    src_file.name
-                )
+                f"{self._settings.incorrect_prefix_file}{src_file.name}"
             )
 
             if correct:

@@ -8,11 +8,12 @@ from utils import on_exception
 from utils import logger
 from utils import MyEncoder
 from core import PostgresStagingLoaderSettings
-
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 from states import BaseStorageState
-from query_builder import QueryBuilderBase
+from sqlalchemy.dialects.postgresql import insert
 from typing import Type
-from models import EtlState
+from models.staging import Base
 import sqlalchemy
 import os
 import re
@@ -25,7 +26,7 @@ from typing import Type
 from utils import logger
 from utils import json_parser
 from utils import MyEncoder
-from query_builder import InsertSQLBuilder
+
 
 
 
@@ -34,47 +35,39 @@ class PostgresStagingLoader:
     def __init__(
             self,
             settings: PostgresStagingLoaderSettings,
-            model: Type[BaseModel],
+            model: Type[Base],
     ) -> None:
         self._settings = settings
         self._model = model
 
     @on_exception(
-        exception=psycopg.DatabaseError,
+        exception=OperationalError,
         start_sleep_time=1,
         factor=2,
         border_sleep_time=15,
         max_retries=15,
         logger=logger,
     )
-    def _load(self, models: list[BaseModel | None]):
-        """Extract rows to files."""
-        with psycopg.connect(conninfo=self._settings.conn_params) as conn:
-            with conn.cursor() as curs:
-                for model in models:
-                    curs.execute(
-                        InsertSQLBuilder(
-                            schema_name=self._settings.dbschema,
-                            table_name=self._model.__table_name__,
-                            insert_data=model.model_dump(),
-                            conflict_columns=['id'],
-                            update_data=self._model.model_fields.keys() - ['id']
-                        ).build_query()
-                    )
-
+    def _load(self, models: list[Base | None]):
+        engine = sqlalchemy.create_engine(self._settings.conn_params)
+        with Session(engine) as session:
+            for model in models:
+                try:
+                    session.merge(model)
+                    session.commit()
+                except Exception as err:
+                    session.rollback()
+                    raise err
 
 
     def run(self):
         for src_file in pathlib.Path(self._settings.dir_path).glob(f"**/{self._settings.src_prefix_file}-*.json"):
-            models: list[BaseModel | None] = []
+            models: list[Base | None] = []
 
             with open(src_file, 'r', encoding='utf-8') as f:
                 rows = json.load(f, object_hook=json_parser)
                 for row in rows:
-                    fields_value = dict()
-                    for field in self._model.model_fields:
-                        fields_value[field] = row[field]
-                    model = self._model(**fields_value)
+                    model = self._model(**row)
                     models.append(model)
 
             self._load(models)

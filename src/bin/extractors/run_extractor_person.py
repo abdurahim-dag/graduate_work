@@ -17,7 +17,7 @@ if __name__=='__main__':
         dir_path=settings.data_dir_path,
     )
     storage_state = RedisStorageState(
-        key='etl:extractor:film_work',
+        key='etl:extractor:person',
         host=settings.state_host,
         port=settings.state_port,
     )
@@ -28,7 +28,7 @@ if __name__=='__main__':
         query_builder_type=SimpleSQLBuilder,
         query_builder_settings=SqlQueryBuilderSettings(
             source_type='postgres',
-            source_name='film_work',
+            source_name='person',
             dbschema='content'
         ),
     )

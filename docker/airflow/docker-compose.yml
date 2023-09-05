@@ -23,7 +23,8 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
-    - ./dags:/opt/airflow/dags
+    - ../../dags:/opt/airflow/dags
+    - ../../src:/opt/airflow/src
     - airflow-logs-volume-md:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
     - airflow-data-volume-md:/data

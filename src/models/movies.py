@@ -1,18 +1,15 @@
-from pendulum import DateTime
+from typing import Optional
 from uuid import UUID
-from typing import Annotated, get_origin, Optional
-from pendulum import Date
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    field_validator,
-    FieldValidationInfo
- )
 
+from pendulum import DateTime
+from pydantic import BaseModel
+from pydantic import ConfigDict
+from pydantic import field_validator
 
 
 class UUIDMixin(BaseModel):
     id: UUID
+
 
 class DateUUIDMixin(UUIDMixin):
     created: DateTime
@@ -20,33 +17,26 @@ class DateUUIDMixin(UUIDMixin):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-class GenreName(UUIDMixin):
+
+class Genre(DateUUIDMixin):
+    __table_name__ = 'genre'
     name: str
-
-class Genre(GenreName):
-    description: str
+    description: Optional[str]
 
 
-class PersonName(UUIDMixin):
-    name: str
-
-
-class Person(UUIDMixin):
+class Person(DateUUIDMixin):
+    __table_name__ = 'person'
     full_name: str
-    role: str
-    film_ids: list[str] | None
 
 
 class Movie(DateUUIDMixin):
+    __table_name__ = 'film_work'
+
     rating: Optional[float]
     creation_date: Optional[DateTime]
-
     title: Optional[str]
     type: Optional[str]
     description: Optional[str]
-
-    __table_name__ = 'film_work'
-
 
     @field_validator('rating')
     @classmethod
@@ -57,3 +47,19 @@ class Movie(DateUUIDMixin):
             elif v > 100:
                 v = 100
         return v
+
+class GenreFilmWork(UUIDMixin):
+    __table_name__ = 'genre_film_work'
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    film_work_id: UUID
+    genre_id: UUID
+    created: DateTime
+
+
+class PersonFilmWork(UUIDMixin):
+    __table_name__ = 'person_film_work'
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+    film_work_id: UUID
+    person_id: UUID
+    role: str
+    created: DateTime

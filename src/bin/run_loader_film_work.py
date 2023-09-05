@@ -1,7 +1,7 @@
 from loaders import PostgresStagingLoader
 from core import PostgresStagingLoaderSettings
 from core import Settings
-from models import Movie
+from models.staging import FilmWork
 from states import RedisStorageState
 import pathlib
 
@@ -19,6 +19,6 @@ if __name__=='__main__':
     )
     loader = PostgresStagingLoader(
         settings=loader_settings,
-        model=Movie,
+        model=FilmWork,
     )
     loader.run()

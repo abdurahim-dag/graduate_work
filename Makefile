@@ -44,6 +44,6 @@ down-all:
 	docker compose -f ./docker/elasticsearch/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/clickhouse/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/kafka/docker-compose.yml down --remove-orphans -v
-	docker compose -f ./docker/redis/docker-compose.yml down --remove-orphans -v
+	docker compose -f ./docker/state/docker-compose.yml down --remove-orphans -v
 
 start-all: 0-start-staging 0-start-state 0-start-movies 0-start-airflow 0-start-clickhouse 0-start-elasticsearch 0-start-kafka

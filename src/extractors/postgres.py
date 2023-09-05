@@ -100,8 +100,8 @@ class PostgresExtractor:
         # Установим параметры генератора, которые не будут меняться при выгрузке пачек данных
         self._query_builder_settings.limit = self._settings.batch_size
         self._query_builder_settings.where_conditions.extend([
-            f"modified >= '{str(self._state.date_from)}'",
-            f"modified < '{str(self._state.date_to)}'",
+            f"{self._settings.date_field_name} >= '{str(self._state.date_from)}'",
+            f"{self._settings.date_field_name} < '{str(self._state.date_to)}'",
         ]
         )
 

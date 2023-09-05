@@ -1,2 +1,2 @@
 from .base import QueryBuilderBase
-from .sql import SimpleSQLBuilder, InsertSQLBuilder
+from .sql import SimpleSQLBuilder
