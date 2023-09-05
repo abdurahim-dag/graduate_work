@@ -1,26 +1,38 @@
-from extractors import PostgresExtractor
+import sys
+import pathlib
+
 from core import PostgresExtractorSettings
 from core import SqlQueryBuilderSettings
-from core import Settings
-from states import RedisStorageState
+from extractors import PostgresExtractor
 from query_builder import SimpleSQLBuilder
+from states import RedisStorageState
+
+
+host = sys.argv[1]
+port = sys.argv[2]
+db = sys.argv[3]
+username = sys.argv[4]
+password = sys.argv[5]
+batch_size = sys.argv[6]
+dir_path = sys.argv[7]
+state_host = sys.argv[8]
+state_port = sys.argv[9]
 
 if __name__=='__main__':
-    settings = Settings()
     extractor_settings = PostgresExtractorSettings(
-        host=settings.movies_host,
-        port=settings.movies_port,
-        dbname=settings.movies_dbname,
-        username=settings.movies_username,
-        password=settings.movies_password,
-        batch_size=settings.batch_size,
-        dir_path=settings.data_dir_path,
+        host=host,
+        port=int(port),
+        dbname=db,
+        username=username,
+        password=password,
+        batch_size=int(batch_size),
+        dir_path=pathlib.PurePath(dir_path),
         date_field_name='created'
     )
     storage_state = RedisStorageState(
         key='etl:extractor:person_film_work',
-        host=settings.state_host,
-        port=settings.state_port,
+        host=state_host,
+        port=int(state_port),
     )
 
     extractor = PostgresExtractor(

@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
-from sqlalchemy import Table, Column, UUID
+from sqlalchemy import Table, Column, UUID, DateTime
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 import datetime
@@ -24,17 +24,37 @@ person_film_work = Table(
     Base.metadata,
     Column("id", UUID, primary_key=True),
     Column("role", String()),
-    Column("film_work", UUID, ForeignKey("film_work.id")),
-    Column("person", UUID, ForeignKey("person.id")),
+    Column("created", DateTime),
+    Column("film_work_id", UUID, ForeignKey("film_work.id")),
+    Column("person_id", UUID, ForeignKey("person.id")),
 )
 
 genre_film_work = Table(
     "genre_film_work",
     Base.metadata,
     Column("id", UUID, primary_key=True),
-    Column("film_work", UUID, ForeignKey("film_work.id")),
-    Column("genre", UUID, ForeignKey("genre.id")),
+    Column("created", DateTime),
+    Column("film_work_id", UUID, ForeignKey("film_work.id")),
+    Column("genre_id", UUID, ForeignKey("genre.id")),
 )
+
+class PersonFilmWork(CommonMixin, Base):
+    __tablename__ = "person_film_work"
+    __table_args__ = {'extend_existing': True}
+
+    role: Mapped[str]
+    created: Mapped[datetime.datetime]
+    film_work_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("film_work.id"))
+    person_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("person.id"))
+
+
+class GenreFilmWork(CommonMixin, Base):
+    __tablename__ = "genre_film_work"
+    __table_args__ = {'extend_existing': True}
+
+    created: Mapped[datetime.datetime]
+    film_work_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("film_work.id"))
+    genre_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("genre.id"))
 
 
 class TimeStampedMixin:

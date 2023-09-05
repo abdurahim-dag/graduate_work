@@ -2,7 +2,7 @@ import json
 
 import redis
 from utils import logger, on_exception, MyEncoder, json_parser
-from models import EtlState
+from models.state import EtlState
 from .base import BaseStorageState
 
 

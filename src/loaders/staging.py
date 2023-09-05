@@ -61,7 +61,7 @@ class PostgresStagingLoader:
 
 
     def run(self):
-        for src_file in pathlib.Path(self._settings.dir_path).glob(f"**/{self._settings.src_prefix_file}-*.json"):
+        for src_file in pathlib.Path(self._settings.dir_path).glob(f"**/{self._settings.src_prefix_file}*.json"):
             models: list[Base | None] = []
 
             with open(src_file, 'r', encoding='utf-8') as f:

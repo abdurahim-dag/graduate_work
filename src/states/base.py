@@ -1,5 +1,5 @@
 import abc
-from models import EtlState
+from models.state import EtlState
 
 class BaseStorageState:
     @abc.abstractmethod

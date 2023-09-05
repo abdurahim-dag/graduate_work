@@ -1,5 +1,10 @@
-FROM apache/airflow:latest
+FROM apache/airflow:2.7.0-python3.10
 ARG BUILD_ENVIRONMENT=dev
+
+USER root
+RUN mkdir /data \
+  && chown airflow: /data
+USER airflow
 
 # Compulsory to switch parameter
 ENV PIP_USER=false

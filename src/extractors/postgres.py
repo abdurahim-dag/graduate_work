@@ -13,7 +13,7 @@ from core import PostgresExtractorSettings, SqlQueryBuilderSettings
 from states import BaseStorageState
 from query_builder import QueryBuilderBase
 from typing import Type
-from models import EtlState
+from models.state import EtlState
 
 class PostgresExtractor:
     """Extract batches rows to files."""
