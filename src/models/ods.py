@@ -87,5 +87,6 @@ class FilmWork(CommonMixin, TimeStampedMixin, Base):
 class DLQ(Base):
     __tablename__ = "dlq"
 
+    id: Mapped[int] = mapped_column(primary_key=True)
     obj: Mapped[str]
     description: Mapped[str]

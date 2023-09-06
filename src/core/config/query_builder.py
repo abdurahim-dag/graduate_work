@@ -1,7 +1,7 @@
+from typing import List
+from typing import Tuple
+
 from pydantic import BaseModel
-import dataclasses
-import pathlib
-from typing import List, Tuple, Optional
 
 
 class BaseQueryBuilderSettings(BaseModel):
@@ -17,5 +17,6 @@ class SqlQueryBuilderSettings(BaseQueryBuilderSettings):
     """Специализированный класс настроек, для SQL."""
     dbschema: str = 'content'
     where_conditions: List[str] = []
+    order_by: List[Tuple[str, str]] = [('modified', 'ASC')]
     limit: int = 100
     offset: int = 0

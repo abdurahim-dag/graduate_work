@@ -1,5 +1,5 @@
-import sys
 import pathlib
+import sys
 
 from core import PostgresExtractorSettings
 from core import SqlQueryBuilderSettings
@@ -42,7 +42,8 @@ if __name__=='__main__':
         query_builder_settings=SqlQueryBuilderSettings(
             source_type='postgres',
             source_name='person_film_work',
-            dbschema='content'
+            dbschema='content',
+            order_by=[('created', 'ASC')]
         ),
     )
 

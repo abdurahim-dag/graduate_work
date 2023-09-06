@@ -2,13 +2,13 @@ version: '3.8'
 
 services:
   postgres:
-    container_name: staging
+    container_name: ods
     build:
       context: ../../
-      dockerfile: ./docker/staging/Dockerfile
+      dockerfile: ./docker/ods/Dockerfile
     env_file:
       - ../../.env.example
-    hostname: staging
+    hostname: ods
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "etl"]
       interval: 5s
@@ -19,7 +19,7 @@ services:
       - shared_network
       - default
     volumes:
-      - db-staging-volume-md:/var/lib/postgresql/data
+      - db-ods-volume-md:/var/lib/postgresql/data
     restart: unless-stopped
 
 networks:
@@ -28,4 +28,4 @@ networks:
     driver: bridge
 
 volumes:
-  db-staging-volume-md:
+  db-ods-volume-md:

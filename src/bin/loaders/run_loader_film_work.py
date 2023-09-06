@@ -1,9 +1,9 @@
 import pathlib
 import sys
 
-from core import PostgresStagingLoaderSettings
-from loaders import PostgresStagingLoader
-from models.staging import FilmWork
+from core import PostgresODSLoaderSettings
+from loaders import PostgresODSLoader
+from models.ods import FilmWork
 
 
 host = sys.argv[1]
@@ -16,7 +16,7 @@ dir_path = sys.argv[7]
 
 if __name__=='__main__':
 
-    loader_settings = PostgresStagingLoaderSettings(
+    loader_settings = PostgresODSLoaderSettings(
         host=host,
         port=int(port),
         dbname=dbname,
@@ -24,9 +24,9 @@ if __name__=='__main__':
         password=password,
         batch_size=int(batch_size),
         dir_path=pathlib.PurePath(dir_path),
-        src_prefix_file='correct-transformed-extract-film_work-'
+        src_prefix_file='extract-film_work-'
     )
-    loader = PostgresStagingLoader(
+    loader = PostgresODSLoader(
         settings=loader_settings,
         model=FilmWork,
     )

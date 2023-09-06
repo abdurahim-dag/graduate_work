@@ -1,5 +1,5 @@
-0-start-staging:
-	docker compose -f ./docker/staging/docker-compose.yml --env-file ./.env.example up -d
+0-start-ods:
+	docker compose -f ./docker/ods/docker-compose.yml --env-file ./.env.example up -d
 
 0-start-movies:
 	docker compose -f ./docker/movies/docker-compose.yml --env-file ./.env.example up -d
@@ -37,12 +37,10 @@ import-movies:
 	docker exec -it movies bash -c "psql -d movies_database -U app -a -f /home/person_film_work.sql"
 
 down-all:
-	docker compose -f ./docker/staging/docker-compose.yml down --remove-orphans -v
+	docker compose -f ./docker/ods/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/airflow/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/movies/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/elasticsearch/docker-compose.yml down --remove-orphans -v
-	docker compose -f ./docker/clickhouse/docker-compose.yml down --remove-orphans -v
-	docker compose -f ./docker/kafka/docker-compose.yml down --remove-orphans -v
 	docker compose -f ./docker/state/docker-compose.yml down --remove-orphans -v
 
 add-variables:
@@ -68,17 +66,24 @@ add-conn-state:
     \"schema\": \"0\"\
 }'"
 
-add-conn-staging:
-	docker exec airflow-webserver bash -c "airflow connections add \"staging\" --conn-json '{\
+add-conn-ods:
+	docker exec airflow-webserver bash -c "airflow connections add \"ods\" --conn-json '{\
     \"conn_type\": \"postgres\",\
     \"login\": \"etl\",\
     \"password\": \"123qwe\",\
-    \"host\": \"staging\",\
+    \"host\": \"ods\",\
     \"port\": \"5432\",\
     \"schema\": \"etl\",\
     \"extra\": {\"sslmode\": \"disable\"}\
 }'"
 
-start-all: 0-start-staging 0-start-state 0-start-movies 0-start-airflow 0-start-clickhouse 0-start-elasticsearch 0-start-kafka
+add-conn-es:
+	docker exec airflow-webserver bash -c "airflow connections add \"elasticsearch\" --conn-json '{\
+    \"conn_type\": \"elasticsearch\",\
+    \"host\": \"es01\",\
+    \"port\": \"9200\"\
+}'"
 
-add-conn-all: add-conn-movies add-conn-staging  add-conn-state
+start-all: 0-start-ods 0-start-state 0-start-movies 0-start-airflow 0-start-elasticsearch
+
+add-conn-all: add-conn-movies add-conn-ods add-conn-state add-conn-es

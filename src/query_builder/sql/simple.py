@@ -17,6 +17,13 @@ class SimpleSQLBuilder(QueryBuilderBase):
         return "WHERE " + " AND ".join(self._settings.where_conditions)\
             if self._settings.where_conditions else ""
 
+    def _build_order_by(self) -> str:
+        order_strings = [
+            f"{field} {direction}" for field, direction
+            in self._settings.order_by
+        ]
+        return "ORDER BY " + ", ".join(order_strings) if order_strings else ""
+
     def _build_limit_offset(self) -> str:
         limit = f"LIMIT {self._settings.limit}" if self._settings.limit else ""
         offset = f"OFFSET {self._settings.offset}" if self._settings.offset else ""
@@ -36,7 +43,8 @@ class SimpleSQLBuilder(QueryBuilderBase):
         from_clause = f"FROM {self._settings.dbschema}.{self._settings.source_name}"
 
         query = f"""{select_clause} {from_clause}
-            {self._build_where_conditions()}"""
+            {self._build_where_conditions()}
+            {self._build_order_by()}"""
 
         limit_offset = self._build_limit_offset()
         if limit_offset:

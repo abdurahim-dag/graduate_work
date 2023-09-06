@@ -1,7 +1,6 @@
-from pydantic import BaseModel
-import dataclasses
 import pathlib
-from typing import List, Tuple, Optional
+
+from pydantic import BaseModel
 
 
 class PostgresExtractorSettings(BaseModel):

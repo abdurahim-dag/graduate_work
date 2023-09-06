@@ -1,5 +1,5 @@
-import sys
 import pathlib
+import sys
 
 from core import PostgresExtractorSettings
 from core import SqlQueryBuilderSettings

@@ -1,19 +1,19 @@
 import json
-from psycopg.rows import dict_row
-from pathlib import PurePath, Path
+from typing import Type
 
 import pendulum
 import psycopg
+from psycopg.rows import dict_row
 
-from utils import on_exception
-from utils import logger
-from utils import MyEncoder
-from core import PostgresExtractorSettings, SqlQueryBuilderSettings
-
-from states import BaseStorageState
-from query_builder import QueryBuilderBase
-from typing import Type
+from core import PostgresExtractorSettings
+from core import SqlQueryBuilderSettings
 from models.state import EtlState
+from query_builder import QueryBuilderBase
+from states import BaseStorageState
+from utils import MyEncoder
+from utils import logger
+from utils import on_exception
+
 
 class PostgresExtractor:
     """Extract batches rows to files."""

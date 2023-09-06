@@ -1,15 +1,12 @@
 import json
-import os
-import pathlib
 
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import Session
 
-from core.config import PostgresStagingLoaderSettings
-from models.staging import Base
-from models.staging import DLQ
-from utils import json_parser
+from core.config import PostgresODSLoaderSettings
+from models.ods import DLQ
+from utils import MyEncoder
 from utils import logger
 from utils import on_exception
 
@@ -18,9 +15,15 @@ class DLQLoader:
 
     def __init__(
             self,
-            settings: PostgresStagingLoaderSettings,
+            settings: PostgresODSLoaderSettings,
     ) -> None:
         self._settings = settings
+        self._engine = None
+        self._session = None
+
+    def _set_session(self):
+        self._engine = sqlalchemy.create_engine(self._settings.conn_params)
+        self._session = Session(self._engine)
 
     @on_exception(
         exception=OperationalError,
@@ -31,19 +34,20 @@ class DLQLoader:
         logger=logger,
     )
     def _load(self, model: DLQ):
-        engine = sqlalchemy.create_engine(self._settings.conn_params)
-        with Session(engine) as session:
+        if self._session is None:
+            self._set_session()
+
+        with self._session:
             try:
-                session.add(model)
-                session.commit()
-            except Exception as err:
-                session.rollback()
+                self._session.add(model)
+                self._session.commit()
+            except OperationalError as err:
+                self._session = None
                 raise err
 
     def load(self, value: dict, description: str):
         self._load(DLQ(
-            obj=json.dumps(value),
+            obj=json.dumps(value, cls=MyEncoder, sort_keys=True, ensure_ascii=False),
             description=description
         ))
 
-    def ru
