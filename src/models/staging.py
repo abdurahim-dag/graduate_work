@@ -83,3 +83,9 @@ class FilmWork(CommonMixin, TimeStampedMixin, Base):
     type: Mapped[str]
     genres: Mapped[List[Genre]] = relationship(secondary=genre_film_work)
     person: Mapped[List[Person]] = relationship(secondary=person_film_work)
+
+class DLQ(Base):
+    __tablename__ = "dlq"
+
+    obj: Mapped[str]
+    description: Mapped[str]

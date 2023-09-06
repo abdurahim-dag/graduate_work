@@ -22,4 +22,3 @@ class PostgresStagingLoaderSettings:
     def conn_params(self):
         return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
 
-

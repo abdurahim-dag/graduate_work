@@ -1,37 +1,20 @@
 import json
-from psycopg.rows import dict_row
-from pydantic import BaseModel
-import pendulum
-import psycopg
-import pathlib
-from utils import on_exception
-from utils import logger
-from utils import MyEncoder
-from core import PostgresStagingLoaderSettings
-from sqlalchemy.orm import Session
-from sqlalchemy.exc import OperationalError
-from states import BaseStorageState
-from sqlalchemy.dialects.postgresql import insert
-from typing import Type
-from models.staging import Base
-import sqlalchemy
 import os
-import re
-import json
-from core import JSONTransformSettings
-from pydantic import BaseModel
-import sqlalchemy
 import pathlib
 from typing import Type
-from utils import logger
+
+import sqlalchemy
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import Session
+
+from core import PostgresStagingLoaderSettings
+from models.staging import Base
 from utils import json_parser
-from utils import MyEncoder
-
-
+from utils import logger
+from utils import on_exception
 
 
 class PostgresStagingLoader:
-    """Extract batches rows to files."""
     def __init__(
             self,
             settings: PostgresStagingLoaderSettings,
@@ -56,9 +39,9 @@ class PostgresStagingLoader:
                     session.merge(model)
                     session.commit()
                 except Exception as err:
+                    logger.exception(err)
                     session.rollback()
                     raise err
-
 
     def run(self):
         for src_file in pathlib.Path(self._settings.dir_path).glob(f"**/{self._settings.src_prefix_file}*.json"):

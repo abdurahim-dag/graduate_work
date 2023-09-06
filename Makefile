@@ -80,3 +80,5 @@ add-conn-staging:
 }'"
 
 start-all: 0-start-staging 0-start-state 0-start-movies 0-start-airflow 0-start-clickhouse 0-start-elasticsearch 0-start-kafka
+
+add-conn-all: add-conn-movies add-conn-staging  add-conn-state

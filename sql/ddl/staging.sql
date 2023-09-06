@@ -19,6 +19,12 @@ create table if not exists staging.likes_movies(
     timestamp timestamp
 );
 
+create table if not exists staging.dlq(
+    id bigint generated always AS IDENTITY primary key,
+    obj TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS staging.film_work
 (
     id            UUID PRIMARY KEY,
@@ -51,7 +57,7 @@ create table IF NOT EXISTS staging.person
 CREATE TABLE IF NOT EXISTS staging.genre_film_work
 (
     id           UUID PRIMARY KEY,
-    film_work_id uuid not null REFERENCES film_work(id) ON DELETE CASCADE,
+    film_work_id UUID NOT NULL REFERENCES film_work(id) ON DELETE CASCADE,
     genre_id     UUID NOT NULL REFERENCES genre(id) ON DELETE CASCADE,
     created      TIMESTAMP WITH TIME ZONE
 );

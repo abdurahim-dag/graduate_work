@@ -4,20 +4,20 @@ import os
 import re
 import json
 from core import JSONTransformSettings
-from pydantic import BaseModel
-import sqlalchemy
+import pydantic
 import pathlib
 from typing import Type
 from utils import logger
 from utils import json_parser
 from utils import MyEncoder
 
+
 class JSONTransformer:
 
     def __init__(
         self,
         settings: JSONTransformSettings,
-        model: Type[BaseModel],
+        model: Type[pydantic.BaseModel],
     ):
         """
         Инициализирует объект построителя SQL-запросов.
@@ -26,7 +26,7 @@ class JSONTransformer:
             sql_builder = SQLQueryBuilder(etl_settings)
         """
         self._settings = settings
-        self._model: Type[BaseModel] = model
+        self._model: Type[pydantic.BaseModel] = model
 
 
     def run(self):
@@ -35,11 +35,7 @@ class JSONTransformer:
             incorrect: list[dict | None] = []
 
             with open(src_file, 'r', encoding='utf-8') as f:
-                try:
-                    rows = json.load(f, object_hook=json_parser)
-                except Exception as err:
-                    logger.exception(err)
-                    continue
+                rows = json.load(f, object_hook=json_parser)
                 for row in rows:
                     try:
                         # Чекаем данные по модели.
@@ -49,9 +45,14 @@ class JSONTransformer:
                         model = self._model(**fields_value)
                         correct.append(model.model_dump(mode='json'))
                     # Если ошибка, то значит не соответствует модели.
-                    except Exception as err:
+                    except pydantic.error_wrappers.ValidationError as err:
                         logger.exception(err)
-                        incorrect.append(row)
+                        incorrect.append(
+                            {
+                                'obj': row,
+                                'description': str(err)
+                            }
+                        )
 
             correct_target_file = pathlib.PurePath(
                 self._settings.dir_path,
