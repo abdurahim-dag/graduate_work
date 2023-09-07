@@ -1,3 +1,4 @@
+"""Модели вьюшек, для импорта в ES."""
 import datetime
 
 from sqlalchemy.orm import DeclarativeBase

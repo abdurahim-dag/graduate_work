@@ -11,7 +11,11 @@ dir_path = sys.argv[3]
 
 if __name__=='__main__':
 
-    for target in [('movies', 'extract_view-v_movies'), ('roles', 'extract_view-v_roles'), ('genres', 'extract_view-v_genres')]:
+    for target in [
+        ('movies', 'es-movies'),
+        ('persons', 'es-persons'),
+        ('genres', 'es-genres')
+    ]:
         loader_settings = ESLoaderSettings(
             es_host=es_host,
             es_port=es_port,

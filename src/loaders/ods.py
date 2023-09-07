@@ -1,3 +1,4 @@
+"""Загрузчик в центральный слой."""
 import json
 import os
 import pathlib

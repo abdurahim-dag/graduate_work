@@ -1,3 +1,4 @@
+"""Экспортер из PG."""
 import json
 from typing import Type
 

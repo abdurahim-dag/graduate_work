@@ -1,3 +1,4 @@
+"""Загрузчик в ES."""
 import os
 import pathlib
 from contextlib import closing

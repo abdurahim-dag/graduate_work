@@ -1,8 +1,8 @@
+import datetime
 import json
 import re
 import uuid
-import typing
-import datetime
+
 import pendulum
 
 
@@ -29,8 +29,8 @@ class MyEncoder(json.JSONEncoder):
 class MyDecoder(json.JSONDecoder):
 
     def default(self, dct):
-        print("Edge(actor, movie)")
         return dct
+
 
 def json_parser(dct):
     for k, v in dct.items():
@@ -42,4 +42,3 @@ def json_parser(dct):
             ).match(v):
                 dct[k] = uuid.UUID(v)
     return dct
-

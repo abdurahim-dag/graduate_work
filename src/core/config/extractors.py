@@ -1,9 +1,10 @@
 import pathlib
 
-from pydantic import BaseModel
+import dataclasses
 
 
-class PostgresExtractorSettings(BaseModel):
+@dataclasses.dataclass
+class PostgresExtractorSettings:
     host: str
     port: int
     username: str

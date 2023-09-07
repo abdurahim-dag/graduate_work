@@ -1,3 +1,4 @@
+"""Модели источника о фильмах."""
 from typing import Optional
 from uuid import UUID
 

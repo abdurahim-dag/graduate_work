@@ -1,3 +1,4 @@
+"""Модели, для индексов ES."""
 from uuid import UUID
 
 from pydantic import (

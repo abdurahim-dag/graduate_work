@@ -137,6 +137,16 @@ with DAG(
         dag=dag
     )
 
+    t_transform = BashOperator(
+        task_id='transform',
+        cwd='/opt/airflow/src',
+        bash_command="source /opt/airflow/venv/bin/activate && PYTHONPATH=/opt/airflow/src python /opt/airflow/src/bin/transformers/run_transform_es.py '{{params.dir_path}}'",
+        params = {
+            'dir_path': dir_path,
+        },
+        dag=dag
+    )
+
     t_upload_to_es = BashOperator(
         task_id='upload_to_es',
         cwd='/opt/airflow/src',
@@ -149,4 +159,4 @@ with DAG(
         dag=dag
     )
 
-    start >> groups_extract >> point1 >> groups_load_0 >> point2 >> groups_load_1 >> t_export_views >> t_upload_to_es >> end
+    start >> groups_extract >> point1 >> groups_load_0 >> point2 >> groups_load_1 >> t_export_views >> t_transform >> t_upload_to_es >> end

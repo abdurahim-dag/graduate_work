@@ -1,14 +1,19 @@
-from typing import List
-from typing import Optional
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy import Table, Column, UUID, DateTime
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+"""Модели центрального слоя, для выгрузок"""
 import datetime
 import uuid
+from typing import List
+
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy import Table
+from sqlalchemy import UUID
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+
 
 class Base(DeclarativeBase):
     pass
