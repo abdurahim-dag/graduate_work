@@ -6,7 +6,9 @@ x-airflow-common:
   # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yml
   # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
   # image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.5.1}
-  build: .
+  build:
+    context: ../../
+    dockerfile: ./docker/airflow/Dockerfile
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: CeleryExecutor
@@ -21,10 +23,11 @@ x-airflow-common:
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
   volumes:
-    - ./dags:/opt/airflow/dags
-    - airflow-logs-volume:/opt/airflow/logs
+    - ../../dags:/opt/airflow/dags
+    - ../../src:/opt/airflow/src
+    - airflow-logs-volume-md:/opt/airflow/logs
     - ./plugins:/opt/airflow/plugins
-    - airflow-data-volume:/data
+    - airflow-data-volume-md:/data
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -41,7 +44,7 @@ services:
       POSTGRES_PASSWORD: airflow
       POSTGRES_DB: airflow
     volumes:
-      - postgres-airflow-db-volume:/var/lib/postgresql/data
+      - postgres-airflow-db-volume-md:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 5s
@@ -70,6 +73,9 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
+    networks:
+      - shared_network
+      - default
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -105,6 +111,9 @@ services:
       # Required to handle warm shutdown of the celery workers properly
       # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
       DUMB_INIT_SETSID: "0"
+    networks:
+      - shared_network
+      - default
     restart: always
     depends_on:
       <<: *airflow-common-depends-on
@@ -219,7 +228,12 @@ services:
 #      airflow-init:
 #        condition: service_completed_successfully
 
+networks:
+  shared_network:
+    name: shared_network
+    driver: bridge
+
 volumes:
-  postgres-airflow-db-volume:
-  airflow-logs-volume:
-  airflow-data-volume:
+  postgres-airflow-db-volume-md:
+  airflow-logs-volume-md:
+  airflow-data-volume-md:

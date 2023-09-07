@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: ods
+    build:
+      context: ../../
+      dockerfile: ./docker/ods/Dockerfile
+    env_file:
+      - ../../.env.example
+    hostname: ods
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "etl"]
+      interval: 5s
+      retries: 5
+    ports:
+      - 5433:5432
+    networks:
+      - shared_network
+      - default
+    volumes:
+      - db-ods-volume-md:/var/lib/postgresql/data
+    restart: unless-stopped
+
+networks:
+  shared_network:
+    name: shared_network
+    driver: bridge
+
+volumes:
+  db-ods-volume-md:

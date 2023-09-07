@@ -1,0 +1,5 @@
+curl -XGET "http://localhost:9200/_cluster/state?pretty"
+curl http://localhost:9200/_aliases?pretty=true
+curl http://localhost:9200/_cat/indices?v
+curl http://localhost:9200/movies/_count
+curl -X GET "localhost:9200/movies/_doc/6d867402-f033-4d30-ae20-a149cfa5cacf?pretty"

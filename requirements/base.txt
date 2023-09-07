@@ -1,0 +1,8 @@
+sqlalchemy==2.0.20
+redis==5.0.0
+psycopg[binary]==3.1.10
+pendulum==2.1.2
+pydantic==2.3.0
+pydantic-settings==2.0.3
+psycopg2_binary==2.9.7
+elasticsearch==7.17.7

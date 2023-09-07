@@ -1,11 +1,24 @@
+version: '3.8'
 services:
   clickhouse:
     build:
       context: ../../
       dockerfile: ./docker/clickhouse/Dockerfile
+    ports:
+      - "9000:9000"
+      - "8123:8123"
     env_file:
       - ../../.env.example
+    networks:
+      - shared_network
+      - default
     volumes:
-      - clickhouse_data:/var/lib/clickhouse
+      - clickhouse_data-md:/var/lib/clickhouse
+
+networks:
+  shared_network:
+    name: shared_network
+    driver: bridge
+
 volumes:
-  clickhouse_data:
+  clickhouse_data-md:
