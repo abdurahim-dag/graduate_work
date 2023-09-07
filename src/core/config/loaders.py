@@ -21,6 +21,7 @@ class PostgresODSLoaderSettings:
     def conn_params(self):
         return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
 
+
 @dataclasses.dataclass
 class ESLoaderSettings:
     # Settings for ElasticsearchLoader.
@@ -35,4 +36,3 @@ class ESLoaderSettings:
     @property
     def conn_params(self):
         return f"http://{self.es_host}:{self.es_port}"
-

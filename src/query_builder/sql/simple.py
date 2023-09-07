@@ -4,6 +4,7 @@ from query_builder import QueryBuilderBase
 
 class SimpleSQLBuilder(QueryBuilderBase):
     """Простой генератор запросов."""
+
     def __init__(self, settings: SqlQueryBuilderSettings):
         """
         Инициализирует объект построителя SQL-запросов.
@@ -14,13 +15,15 @@ class SimpleSQLBuilder(QueryBuilderBase):
         self._settings = settings
 
     def _build_where_conditions(self) -> str:
-        return "WHERE " + " AND ".join(self._settings.where_conditions)\
-            if self._settings.where_conditions else ""
+        return (
+            "WHERE " + " AND ".join(self._settings.where_conditions)
+            if self._settings.where_conditions
+            else ""
+        )
 
     def _build_order_by(self) -> str:
         order_strings = [
-            f"{field} {direction}" for field, direction
-            in self._settings.order_by
+            f"{field} {direction}" for field, direction in self._settings.order_by
         ]
         return "ORDER BY " + ", ".join(order_strings) if order_strings else ""
 
@@ -36,8 +39,7 @@ class SimpleSQLBuilder(QueryBuilderBase):
         Пример:
             sql_query = sql_builder.build_query()
         """
-        fields = ", ".join(self._settings.fields)\
-            if self._settings.fields else "*"
+        fields = ", ".join(self._settings.fields) if self._settings.fields else "*"
         select_clause = f"SELECT {fields}"
 
         from_clause = f"FROM {self._settings.dbschema}.{self._settings.source_name}"

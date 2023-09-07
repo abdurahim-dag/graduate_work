@@ -3,16 +3,8 @@ import datetime
 import uuid
 from typing import List
 
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
-from sqlalchemy import Table
-from sqlalchemy import UUID
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
+from sqlalchemy import UUID, Column, DateTime, ForeignKey, String, Table
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
 class Base(DeclarativeBase):
@@ -21,7 +13,6 @@ class Base(DeclarativeBase):
 
 class CommonMixin:
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-
 
 
 person_film_work = Table(
@@ -42,6 +33,7 @@ genre_film_work = Table(
     Column("film_work_id", UUID, ForeignKey("film_work.id")),
     Column("genre_id", UUID, ForeignKey("genre.id")),
 )
+
 
 class PersonFilmWork(CommonMixin, Base):
     __tablename__ = "person_film_work"
@@ -66,11 +58,13 @@ class TimeStampedMixin:
     created: Mapped[datetime.datetime]
     modified: Mapped[datetime.datetime]
 
+
 class Genre(CommonMixin, TimeStampedMixin, Base):
     __tablename__ = "genre"
 
     name: Mapped[str]
     description: Mapped[str]
+
 
 class Person(CommonMixin, TimeStampedMixin, Base):
     __tablename__ = "person"
@@ -86,8 +80,9 @@ class FilmWork(CommonMixin, TimeStampedMixin, Base):
     creation_date: Mapped[datetime.datetime]
     rating: Mapped[float]
     type: Mapped[str]
-    genres: Mapped[List[Genre]] = relationship(secondary=genre_film_work)
-    person: Mapped[List[Person]] = relationship(secondary=person_film_work)
+    genres: Mapped[list[Genre]] = relationship(secondary=genre_film_work)
+    person: Mapped[list[Person]] = relationship(secondary=person_film_work)
+
 
 class DLQ(Base):
     __tablename__ = "dlq"

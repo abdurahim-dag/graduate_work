@@ -1,6 +1,5 @@
-import pathlib
-
 import dataclasses
+import pathlib
 
 
 @dataclasses.dataclass

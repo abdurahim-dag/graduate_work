@@ -1,8 +1,10 @@
 import json
 
 import redis
-from utils import logger, on_exception, MyEncoder, json_parser
+
 from models.state import EtlState
+from utils import MyEncoder, json_parser, logger, on_exception
+
 from .base import BaseStorageState
 
 

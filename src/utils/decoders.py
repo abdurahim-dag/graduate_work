@@ -27,7 +27,6 @@ class MyEncoder(json.JSONEncoder):
 
 
 class MyDecoder(json.JSONDecoder):
-
     def default(self, dct):
         return dct
 

@@ -5,7 +5,6 @@ from core import PostgresODSLoaderSettings
 from loaders import PostgresODSLoader
 from models.ods import Person
 
-
 host = sys.argv[1]
 port = sys.argv[2]
 dbname = sys.argv[3]
@@ -14,7 +13,7 @@ password = sys.argv[5]
 batch_size = sys.argv[6]
 dir_path = sys.argv[7]
 
-if __name__=='__main__':
+if __name__ == '__main__':
 
     loader_settings = PostgresODSLoaderSettings(
         host=host,
@@ -24,10 +23,7 @@ if __name__=='__main__':
         password=password,
         batch_size=int(batch_size),
         dir_path=pathlib.PurePath(dir_path),
-        src_prefix_file='extract-person-'
+        src_prefix_file='extract-person-',
     )
-    loader = PostgresODSLoader(
-        settings=loader_settings,
-        model=Person,
-    )
+    loader = PostgresODSLoader(settings=loader_settings, model=Person)
     loader.run()

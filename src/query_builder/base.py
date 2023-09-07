@@ -1,4 +1,5 @@
 import abc
+
 from core import BaseQueryBuilderSettings
 
 
@@ -7,7 +8,6 @@ class QueryBuilderBase(abc.ABC):
     def __init__(self, settings: BaseQueryBuilderSettings):
         """Строит запрос."""
         pass
-
 
     @abc.abstractmethod
     def build_query(self) -> str:

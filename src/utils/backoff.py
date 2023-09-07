@@ -5,27 +5,27 @@ from functools import wraps
 
 def sleep_expo_gen(initial, maximum, factor):
     """Generator for exponential delay.
-     Args:
-         initial: The mathematical base of the exponentiation operation.
-         factor: Factor to multiply the exponentiation by.
-         maximum: The maximum value to yield.
-     """
+    Args:
+        initial: The mathematical base of the exponentiation operation.
+        factor: Factor to multiply the exponentiation by.
+        maximum: The maximum value to yield.
+    """
     n = 0
     delay = min(initial, maximum)
     while True:
         yield delay
-        delay = min(factor * (2 ** n) + random.random(), maximum)
+        delay = min(factor * (2**n) + random.random(), maximum)
         n += 1
 
 
 def on_exception(
-        exception,
-        logger,
-        start_sleep_time=3,
-        factor=2,
-        border_sleep_time=10,
-        max_retries=10,
-    ):
+    exception,
+    logger,
+    start_sleep_time=3,
+    factor=2,
+    border_sleep_time=10,
+    max_retries=10,
+):
     def retry_exception(target):
         # Декорируем с помощью wraps,
         # чтобы не потерять описание декорируемой функции.
@@ -40,14 +40,20 @@ def on_exception(
                 except exception as err:
                     logger.exception(err)
                     if max_retries <= step:
-                        logger.info("Backoff retries the maximum number of steps has been reached")
+                        logger.info(
+                            "Backoff retries the maximum number of steps has been reached"
+                        )
                         raise err
                     step += 1
                     sleep_time = next(sleep_gen)
-                    logger.info("Backoff retries %i step sleep %.2f sec", step, sleep_time)
+                    logger.info(
+                        "Backoff retries %i step sleep %.2f sec", step, sleep_time
+                    )
                     time.sleep(sleep_time)
                 else:
                     break
             return res
+
         return retry
+
     return retry_exception

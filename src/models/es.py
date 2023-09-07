@@ -1,18 +1,16 @@
 """Модели, для индексов ES."""
 from uuid import UUID
 
-from pydantic import (
-    BaseModel,
-    Field,
-)
-
+from pydantic import BaseModel, Field
 
 
 class UUIDMixin(BaseModel):
     id: UUID
 
+
 class GenreName(UUIDMixin):
     name: str
+
 
 class Genre(GenreName):
     description: str

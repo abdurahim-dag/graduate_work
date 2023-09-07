@@ -1,8 +1,7 @@
 """Модели вьюшек, для импорта в ES."""
 import datetime
 
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import DeclarativeBase, Mapped
 
 
 class Base(DeclarativeBase):
@@ -11,6 +10,7 @@ class Base(DeclarativeBase):
 
 class TimeStampedMixin:
     modified: Mapped[datetime.datetime]
+
 
 class Movie(TimeStampedMixin, Base):
     __tablename__ = "v_movies"

@@ -1,12 +1,10 @@
 import pathlib
 import sys
 
-from core import PostgresExtractorSettings
-from core import SqlQueryBuilderSettings
+from core import PostgresExtractorSettings, SqlQueryBuilderSettings
 from extractors import PostgresExtractor
 from query_builder import SimpleSQLBuilder
 from states import RedisStorageState
-
 
 host = sys.argv[1]
 port = sys.argv[2]
@@ -18,7 +16,7 @@ dir_path = sys.argv[7]
 state_host = sys.argv[8]
 state_port = sys.argv[9]
 
-if __name__=='__main__':
+if __name__ == '__main__':
     extractor_settings = PostgresExtractorSettings(
         host=host,
         port=int(port),
@@ -27,12 +25,10 @@ if __name__=='__main__':
         password=password,
         batch_size=int(batch_size),
         dir_path=pathlib.PurePath(dir_path),
-        date_field_name='created'
+        date_field_name='created',
     )
     storage_state = RedisStorageState(
-        key='etl:extractor:genre_film_work',
-        host=state_host,
-        port=int(state_port),
+        key='etl:extractor:genre_film_work', host=state_host, port=int(state_port)
     )
 
     extractor = PostgresExtractor(
@@ -43,7 +39,7 @@ if __name__=='__main__':
             source_type='postgres',
             source_name='genre_film_work',
             dbschema='content',
-            order_by=[('created', 'ASC')]
+            order_by=[('created', 'ASC')],
         ),
     )
 

@@ -7,17 +7,11 @@ from sqlalchemy.orm import Session
 
 from core.config import PostgresODSLoaderSettings
 from models.ods import DLQ
-from utils import MyEncoder
-from utils import logger
-from utils import on_exception
+from utils import MyEncoder, logger, on_exception
 
 
 class DLQLoader:
-
-    def __init__(
-            self,
-            settings: PostgresODSLoaderSettings,
-    ) -> None:
+    def __init__(self, settings: PostgresODSLoaderSettings) -> None:
         self._settings = settings
         self._engine = None
         self._session = None
@@ -47,8 +41,11 @@ class DLQLoader:
                 raise err
 
     def load(self, value: dict, description: str):
-        self._load(DLQ(
-            obj=json.dumps(value, cls=MyEncoder, sort_keys=True, ensure_ascii=False),
-            description=description
-        ))
-
+        self._load(
+            DLQ(
+                obj=json.dumps(
+                    value, cls=MyEncoder, sort_keys=True, ensure_ascii=False
+                ),
+                description=description,
+            )
+        )

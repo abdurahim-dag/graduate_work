@@ -6,31 +6,27 @@ import pendulum
 import psycopg
 from psycopg.rows import dict_row
 
-from core import PostgresExtractorSettings
-from core import SqlQueryBuilderSettings
+from core import PostgresExtractorSettings, SqlQueryBuilderSettings
 from models.state import EtlState
 from query_builder import QueryBuilderBase
 from states import BaseStorageState
-from utils import MyEncoder
-from utils import logger
-from utils import on_exception
+from utils import MyEncoder, logger, on_exception
 
 
 class PostgresExtractor:
     """Extract batches rows to files."""
-    def __init__(
-            self,
-            settings: PostgresExtractorSettings,
-            storage_state: BaseStorageState,
-            query_builder_type: Type[QueryBuilderBase],
-            query_builder_settings: SqlQueryBuilderSettings,
 
+    def __init__(
+        self,
+        settings: PostgresExtractorSettings,
+        storage_state: BaseStorageState,
+        query_builder_type: type[QueryBuilderBase],
+        query_builder_settings: SqlQueryBuilderSettings,
     ) -> None:
         self._settings = settings
         self._storage_state = storage_state
         self._query_builder_type = query_builder_type
         self._query_builder_settings = query_builder_settings
-
 
     def _get_filname(self, prefix: str, name: str, date: str, offset: str) -> str:
         return f"{prefix}-{name}-{date}-{offset}.json"
@@ -40,10 +36,9 @@ class PostgresExtractor:
             prefix=self._settings.filename_prefix,
             name=self._query_builder_settings.source_name,
             date=date,
-            offset=offset
+            offset=offset,
         )
         return str(self._settings.dir_path / file_name)
-
 
     @on_exception(
         exception=psycopg.DatabaseError,
@@ -55,13 +50,17 @@ class PostgresExtractor:
     )
     def _extract(self):
         """Extract rows to files."""
-        with psycopg.connect(conninfo=self._settings.conn_params, row_factory=dict_row) as conn:
+        with psycopg.connect(
+            conninfo=self._settings.conn_params, row_factory=dict_row
+        ) as conn:
             with conn.cursor() as curs:
 
                 while True:
                     self._query_builder_settings.offset = self._state.offset
 
-                    sql = self._query_builder_type(settings=self._query_builder_settings).build_query()
+                    sql = self._query_builder_type(
+                        settings=self._query_builder_settings
+                    ).build_query()
 
                     curs.execute(sql)
 
@@ -71,11 +70,13 @@ class PostgresExtractor:
 
                     file_path = self._get_filepath(
                         date=str(self._state.date_from.date()),
-                        offset=str(self._state.offset)
+                        offset=str(self._state.offset),
                     )
 
                     with open(file_path, 'w', encoding='utf-8') as f:
-                        json.dump(rows, f, cls=MyEncoder, sort_keys=True, ensure_ascii=False)
+                        json.dump(
+                            rows, f, cls=MyEncoder, sort_keys=True, ensure_ascii=False
+                        )
 
                     # Сохраняем каждый выполненный шаг.
                     self._state.offset += self._query_builder_settings.limit
@@ -100,10 +101,11 @@ class PostgresExtractor:
 
         # Установим параметры генератора, которые не будут меняться при выгрузке пачек данных
         self._query_builder_settings.limit = self._settings.batch_size
-        self._query_builder_settings.where_conditions.extend([
-            f"{self._settings.date_field_name} >= '{str(self._state.date_from)}'",
-            f"{self._settings.date_field_name} < '{str(self._state.date_to)}'",
-        ]
+        self._query_builder_settings.where_conditions.extend(
+            [
+                f"{self._settings.date_field_name} >= '{str(self._state.date_from)}'",
+                f"{self._settings.date_field_name} < '{str(self._state.date_to)}'",
+            ]
         )
 
         self._extract()

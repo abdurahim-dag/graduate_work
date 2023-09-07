@@ -3,9 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from pendulum import DateTime
-from pydantic import BaseModel
-from pydantic import ConfigDict
-from pydantic import field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 
 class UUIDMixin(BaseModel):
@@ -48,6 +46,7 @@ class Movie(DateUUIDMixin):
             elif v > 100:
                 v = 100
         return v
+
 
 class GenreFilmWork(UUIDMixin):
     __table_name__ = 'genre_film_work'
