@@ -1,5 +1,9 @@
 # ETL на стероидах
 
+https://github.com/abdurahim-dag/graduate_work
+# Разработчики:
+Рагим, Родион(Rodion-ch).
+
 ## Требования
 - Динамические запросы, чтобы не править всё время код.
 - Запустить обработку ETL.
@@ -10,7 +14,7 @@
 
 ### Архитектура
 
-![](.\architecture\ETL.png)
+![](architecture/ETL.png)
 
 ### Логика
 
