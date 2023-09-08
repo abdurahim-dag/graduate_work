@@ -4,35 +4,31 @@ from typing import Any
 
 
 @dataclasses.dataclass
-class PostgresODSLoaderSettings:
+class BaseLoaderSettings:
     host: str
     port: int
+    dir_path: pathlib.PurePath
+    src_prefix_file: str
+    model: Any
+
+
+@dataclasses.dataclass
+class ODSLoaderSettings(BaseLoaderSettings):
     username: str
     password: str
     dbname: str
     batch_size: int
-
-    dir_path: pathlib.PurePath
-    src_prefix_file: str
-
-    dbschema: str = 'ods'
+    schema: str = 'ods'
 
     @property
-    def conn_params(self):
+    def conn_str(self) -> str:
         return f"postgresql://{self.username}:{self.password}@{self.host}:{self.port}/{self.dbname}"
 
 
 @dataclasses.dataclass
-class ESLoaderSettings:
-    # Settings for ElasticsearchLoader.
-    es_host: str
-    es_port: str
-
-    dir_path: pathlib.PurePath
+class ESLoaderSettings(BaseLoaderSettings):
     index_name: str
-    src_prefix_file: str
-    model: Any = None
 
     @property
-    def conn_params(self):
-        return f"http://{self.es_host}:{self.es_port}"
+    def conn_str(self) -> str:
+        return f"http://{self.host}:{self.port}"

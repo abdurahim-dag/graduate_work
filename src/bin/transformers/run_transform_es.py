@@ -1,9 +1,10 @@
 import pathlib
 import sys
 
-from core import TransformSettings
+from core import ESTransformSettings
 from models.es import Genre, Movie, Person
-from transformers import ESTransform
+from transformers import Transformer
+from transformers.backends import ESTransformerBackend
 
 dir_path = sys.argv[1]
 
@@ -13,11 +14,12 @@ if __name__ == '__main__':
         ('extract_view-v_genres', 'genres', Genre),
         ('extract_view-v_movies', 'movies', Movie),
     ]:
-        transformer_settings = TransformSettings(
+        settings = ESTransformSettings(
             dir_path=pathlib.PurePath(dir_path),
-            index_name=target[1],
-            model=target[2],
             src_filename_prefix=target[0],
+            index_name=target[1],
+            model=target[2]
         )
-        transformer = ESTransform(settings=transformer_settings)
+        backend = ESTransformerBackend(settings=settings)
+        transformer = Transformer(backend=backend)
         transformer.run()

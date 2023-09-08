@@ -3,21 +3,25 @@ import json
 
 import sqlalchemy
 from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Session
-
-from core.config import PostgresODSLoaderSettings
+from utils import MyEncoder
+from core.config import ODSLoaderSettings
+from utils import logger
+from utils import on_exception
+from .base import BaseLoaderBackend
 from models.ods import DLQ
-from utils import MyEncoder, logger, on_exception
 
 
-class DLQLoader:
-    def __init__(self, settings: PostgresODSLoaderSettings) -> None:
-        self._settings = settings
+class DLQLoaderBackend(BaseLoaderBackend):
+    """Dead letter queue loader."""
+    def __init__(self, settings: ODSLoaderSettings) -> None:
+        super().__init__(settings)
         self._engine = None
         self._session = None
 
     def _set_session(self):
-        self._engine = sqlalchemy.create_engine(self._settings.conn_params)
+        self._engine = sqlalchemy.create_engine(self._settings.conn_str)
         self._session = Session(self._engine)
 
     @on_exception(
@@ -40,12 +44,15 @@ class DLQLoader:
                 self._session = None
                 raise err
 
-    def load(self, value: dict, description: str):
-        self._load(
-            DLQ(
-                obj=json.dumps(
-                    value, cls=MyEncoder, sort_keys=True, ensure_ascii=False
-                ),
-                description=description,
-            )
+
+    def load(self, data: dict):
+        model = DLQ(
+            obj=json.dumps(
+                data['obj'],
+                cls=MyEncoder,
+                sort_keys=True,
+                ensure_ascii=False
+            ),
+            description=data['description'],
         )
+        self._load(model)

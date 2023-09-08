@@ -1,11 +1,14 @@
 import dataclasses
 import pathlib
-import typing
+import pydantic
 
 
 @dataclasses.dataclass
-class TransformSettings:
+class BaseTransformSettings:
     dir_path: pathlib.PurePath
-    index_name: str
-    model: typing.Any
     src_filename_prefix: str
+
+@dataclasses.dataclass
+class ESTransformSettings(BaseTransformSettings):
+    index_name: str
+    model: pydantic.BaseModel

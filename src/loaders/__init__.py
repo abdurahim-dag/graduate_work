@@ -1,3 +1,9 @@
-from .dead_letter_queue import DLQLoader
-from .es import ESLoader
-from .ods import PostgresODSLoader
+from .backends import BaseLoaderBackend
+
+class Loader:
+    def __init__(self, backend: BaseLoaderBackend):
+        self._backend = backend
+
+    def run(self):
+        for data in self._backend.get_data():
+            self._backend.load(data)

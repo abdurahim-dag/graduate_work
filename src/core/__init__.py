@@ -1,3 +1,4 @@
 from .config import (BaseQueryBuilderSettings, ESLoaderSettings,
-                     PostgresExtractorSettings, PostgresODSLoaderSettings,
-                     SqlQueryBuilderSettings, TransformSettings)
+                     PostgresExtractorSettings, ODSLoaderSettings,
+                     SqlQueryBuilderSettings, BaseTransformSettings,
+                     ESTransformSettings, BaseLoaderSettings)

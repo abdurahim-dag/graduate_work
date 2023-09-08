@@ -1,9 +1,11 @@
 import pathlib
 import sys
 
-from core import PostgresODSLoaderSettings
-from loaders import PostgresODSLoader
+from core import ODSLoaderSettings
+from loaders import Loader
+from loaders.backends import ODSLoaderBackend
 from models.ods import PersonFilmWork
+
 
 host = sys.argv[1]
 port = sys.argv[2]
@@ -14,8 +16,7 @@ batch_size = sys.argv[6]
 dir_path = sys.argv[7]
 
 if __name__ == '__main__':
-
-    loader_settings = PostgresODSLoaderSettings(
+    settings = ODSLoaderSettings(
         host=host,
         port=int(port),
         dbname=dbname,
@@ -24,6 +25,8 @@ if __name__ == '__main__':
         batch_size=int(batch_size),
         dir_path=pathlib.PurePath(dir_path),
         src_prefix_file='extract-person_film_work-',
+        model=PersonFilmWork
     )
-    loader = PostgresODSLoader(settings=loader_settings, model=PersonFilmWork)
+    backend = ODSLoaderBackend(settings=settings)
+    loader = Loader(backend=backend)
     loader.run()
