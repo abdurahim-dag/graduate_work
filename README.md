@@ -41,5 +41,5 @@ https://github.com/abdurahim-dag/graduate_work
 2. Импорт данных источника - make import-movies
 3. Загрузка параметров соединения в Airflow - make add-conn-all
 4. Загрузка переменных в Airflow - make add-variables
-5. Зайдя в интерфейс Airflow запустите даг прогрузки данных - etl-movies-dag
+5. Зайдя в интерфейс Airflow (login: airflow, password: airflow) запустите даг прогрузки данных - etl-movies-dag
 6. Проверьте доступность данных в источнике - curl http://localhost:9200/_cat/indices?v
