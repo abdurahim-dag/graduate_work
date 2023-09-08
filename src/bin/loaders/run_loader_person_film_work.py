@@ -24,7 +24,7 @@ if __name__ == '__main__':
         password=password,
         batch_size=int(batch_size),
         dir_path=pathlib.PurePath(dir_path),
-        src_prefix_file='extract-person_film_work-',
+        src_prefix_file='extract-person_film_work',
         model=PersonFilmWork
     )
     backend = ODSLoaderBackend(settings=settings)

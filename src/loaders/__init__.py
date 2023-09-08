@@ -6,4 +6,5 @@ class Loader:
 
     def run(self):
         for data in self._backend.get_data():
+            print(data)
             self._backend.load(data)

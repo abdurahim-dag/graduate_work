@@ -1,3 +1,4 @@
+from .extractors import BaseExtractorSettings
 from .extractors import PostgresExtractorSettings
 from .loaders import BaseLoaderSettings
 from .loaders import ESLoaderSettings

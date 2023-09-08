@@ -51,6 +51,7 @@ class ODSLoaderBackend(BaseLoaderBackend):
                     models.append(model)
             yield models
             os.remove(src_file)
+            logger.warning("Extracted file %s", src_file)
 
     @on_exception(
         exception=OperationalError,

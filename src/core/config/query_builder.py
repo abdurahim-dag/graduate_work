@@ -16,7 +16,7 @@ class BaseQueryBuilderSettings:
 class SqlQueryBuilderSettings(BaseQueryBuilderSettings):
     """Специализированный класс настроек, для SQL."""
 
-    dbschema: str = 'content'
+    schema: str = 'content'
     where_conditions: list[str] = dataclasses.field(default_factory=list)
     order_by: list[tuple[str, str]] = dataclasses.field(
         default_factory=list[('modified', 'ASC')]

@@ -67,4 +67,4 @@ class ESTransformerBackend(BaseTransformerBackend):
         with open(target_file_path, 'w', encoding='utf-8') as file:
             for model in models:
                 json.dump(model.model_dump(by_alias=True), file, cls=MyEncoder)
-            file.write('\n')
+                file.write('\n')

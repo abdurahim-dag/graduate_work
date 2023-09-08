@@ -44,6 +44,8 @@ class DLQLoaderBackend(BaseLoaderBackend):
                 self._session = None
                 raise err
 
+    def get_data(self):
+        pass
 
     def load(self, data: dict):
         model = DLQ(
