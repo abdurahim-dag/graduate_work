@@ -83,6 +83,7 @@ class PostgresExtractorBackend(BaseExtractorBackend):
                         break
 
                     yield rows
+                    logger.warning("Extracted rows %s", len(rows))
                     # Сохраняем каждый выполненный шаг.
                     self._state.offset += self._query_builder_settings.limit
                     self._storage_state.save(self._state)
@@ -104,4 +105,4 @@ class PostgresExtractorBackend(BaseExtractorBackend):
             json.dump(
                 data, f, cls=MyEncoder, sort_keys=True, ensure_ascii=False
             )
-        logger.info("Extracted file %s", file_path)
+        logger.warning("Extracted file %s", file_path)

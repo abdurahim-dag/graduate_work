@@ -27,7 +27,7 @@ class ESTransformerBackend(BaseTransformerBackend):
         ):
             with open(src_file, encoding='utf-8') as file:
                 src_json = json.load(file)
-            logger.info(f"loaded - {src_file}")
+            logger.warning(f"Start transform file - {src_file}")
             models = []
             for row in src_json:
                 try:
@@ -40,8 +40,8 @@ class ESTransformerBackend(BaseTransformerBackend):
             self._src_file_name = file.name
             yield models
 
-            os.remove(src_file)
-            logger.info(f"removed file - {str(src_file)}")
+            #os.remove(src_file)
+            logger.info(f"Removed file - {str(src_file)}")
 
 
     def transform(self, models: typing.List[pydantic.BaseModel]) -> typing.List[pydantic.BaseModel]:
@@ -63,7 +63,7 @@ class ESTransformerBackend(BaseTransformerBackend):
             self._settings.dir_path,
             f"es-{self._settings.index_name}-{file_name}.json",
         )
-        logger.info(f"target file - {str(target_file_path)}")
+        logger.info(f"Target transformed file - {str(target_file_path)}")
         with open(target_file_path, 'w', encoding='utf-8') as file:
             for model in models:
                 json.dump(model.model_dump(by_alias=True), file, cls=MyEncoder)
